@@ -59,9 +59,9 @@ def run(plan, args):
     )
 
     all_l2_participants = []
-    network_id = ""
+    l1_bridge_address = ""
     for chain in optimism_args_with_right_defaults.chains:
-        all_l2_participants = l2_launcher.launch_l2(
+        all_l2_participants, l1_bridge_address = l2_launcher.launch_l2(
             plan,
             chain.network_params.name,
             chain,
@@ -74,28 +74,12 @@ def run(plan, args):
             global_tolerations,
             persistent,
         )
-        network_id = chain.network_params.network_id
-
-    proposer_key = util.read_network_config_value(
-        plan,
-        deployment_output,
-        "proposer-{0}".format(network_id),
-        ".privateKey",
-    )
-
-    proposer_address = util.read_network_config_value(
-        plan,
-        deployment_output,
-        "proposer-{0}".format(network_id),
-        ".address",
-    )
 
     output = struct(
         all_l1_participants=all_l1_participants,
         pre_funded_accounts=l1.pre_funded_accounts,
         all_l2_participants=all_l2_participants,
-        l2_private_key=proposer_key,
-        l2_address=proposer_address
+        bridge_address=l1_bridge_address
     )
     return output
     # Deploy L2s

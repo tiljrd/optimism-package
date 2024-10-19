@@ -84,4 +84,4 @@ def launch_l2(
         )
     )
 
-    return all_l2_participants
+    return all_l2_participants, l1_bridge_address
