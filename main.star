@@ -57,8 +57,10 @@ def run(plan, args):
         optimism_args_with_right_defaults,
     )
 
+    all_l2_participants = []
+
     for chain in optimism_args_with_right_defaults.chains:
-        l2_launcher.launch_l2(
+        all_l2_participants = l2_launcher.launch_l2(
             plan,
             chain.network_params.name,
             chain,
@@ -77,7 +79,7 @@ def run(plan, args):
     plan.print("Deploying a local L2")
     if type(optimism_args) == "dict":
         l2_services_suffix = ""  # no suffix if one l2
-        l2_launcher.launch_l2(
+        all_l2_participants = l2_launcher.launch_l2(
             plan,
             l2_services_suffix,
             optimism_args,
@@ -125,6 +127,13 @@ def run(plan, args):
             )
     else:
         fail("invalid type provided for param: `optimism-package`")
+
+    output = struct(
+        all_l1_participants=all_l1_participants,
+        pre_funded_accounts=l1.pre_funded_accounts,
+        all_l2_participants=all_l2_participants
+    )
+    return output
 
 
 def get_l1_config(all_l1_participants, l1_network_params, l1_network_id):
