@@ -74,7 +74,12 @@ def run(plan, args):
             persistent,
         )
 
-    return
+    output = struct(
+        all_l1_participants=all_l1_participants,
+        pre_funded_accounts=l1.pre_funded_accounts,
+        all_l2_participants=all_l2_participants
+    )
+    return output
     # Deploy L2s
     plan.print("Deploying a local L2")
     if type(optimism_args) == "dict":
