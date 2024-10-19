@@ -79,7 +79,8 @@ def run(plan, args):
         all_l1_participants=all_l1_participants,
         pre_funded_accounts=l1.pre_funded_accounts,
         all_l2_participants=all_l2_participants,
-        bridge_address=l1_bridge_address
+        bridge_address=l1_bridge_address,
+        l1_network_params=l1_network_params
     )
     return output
     # Deploy L2s
