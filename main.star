@@ -3,6 +3,7 @@ contract_deployer = import_module("./src/contracts/contract_deployer.star")
 l2_launcher = import_module("./src/l2.star")
 wait_for_sync = import_module("./src/wait/wait_for_sync.star")
 input_parser = import_module("./src/package_io/input_parser.star")
+util = import_module("./src/util.star")
 
 
 def run(plan, args):
@@ -58,7 +59,7 @@ def run(plan, args):
     )
 
     all_l2_participants = []
-
+    network_id = ""
     for chain in optimism_args_with_right_defaults.chains:
         all_l2_participants = l2_launcher.launch_l2(
             plan,
@@ -73,11 +74,28 @@ def run(plan, args):
             global_tolerations,
             persistent,
         )
+        network_id = chain.network_params.network_id
+
+    proposer_key = util.read_network_config_value(
+        plan,
+        deployment_output,
+        "proposer-{0}".format(network_id),
+        ".privateKey",
+    )
+
+    proposer_address = util.read_network_config_value(
+        plan,
+        deployment_output,
+        "proposer-{0}".format(network_id),
+        ".address",
+    )
 
     output = struct(
         all_l1_participants=all_l1_participants,
         pre_funded_accounts=l1.pre_funded_accounts,
-        all_l2_participants=all_l2_participants
+        all_l2_participants=all_l2_participants,
+        l2_private_key=proposer_key,
+        l2_address=proposer_address
     )
     return output
     # Deploy L2s
